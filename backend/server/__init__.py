@@ -2,6 +2,10 @@ from flask import Flask
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, login_manager
 
+from flask_graphql import GraphQLView
+
+
+
 from server.db import DB
 from server.configs import Config
 
@@ -27,7 +31,5 @@ def create_app(config_class=Config):
     app.register_blueprint(api)
     app.register_blueprint(graphql)
     app.register_blueprint(auth)
-
-
 
     return app

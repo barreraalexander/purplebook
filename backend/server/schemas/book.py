@@ -1,4 +1,6 @@
 import graphene as gp
+from server import db
+from secrets import token_hex
 
 class Book(gp.ObjectType):
     id = gp.ID(required=True)
@@ -11,25 +13,16 @@ class Book(gp.ObjectType):
 
 class Query(gp.ObjectType):
     book = gp.Field(Book)
+    book_by_id = gp.Field(Book, id=gp.ID(required=True))
     allbooks = gp.List(Book)
 
-    def resolve_book(root, info):
+    def resolve_book_by_id(root, info, id):
         cursor = db.connection.cursor()
-        elem_id = info.context['id']
-        statement = "select * from books where _id = '{}'".format(elem_id)
+        statement = "select * from books where id = '{}'".format(id)
         cursor.execute(statement)
+        record = cursor.fetchone()
+        return record
 
-        record= cursor.fetchone()
-        mdict = {
-            'id' : record['id'],
-            'user_id' : record['user_id'],
-            'title' : record['title'],
-            'description' : record['description'],
-            'urls' : record['urls'],
-            'upldate' : record['upldate'],
-            'moddate' : record['moddate']   
-        }
-        return Book(**mdict)
 
     def resolve_allbooks(root, info):
         cursor = db.connection.cursor()
@@ -37,38 +30,108 @@ class Query(gp.ObjectType):
         statement = "select * from books"
         cursor.execute(statement)
 
-        all_records = cursor.fetchall()
+        records = cursor.fetchall()
 
-        return all_records
+        return records
 
-class Mutation(gp.Mutation):
+class CreateBook(gp.Mutation):
     class Arguments:
         id = gp.ID(required=True)
         user_id = gp.ID(required=True)
         title = gp.String()
-        description  = gp.String()
+        description = gp.String()
         urls = gp.List(gp.String)
-        moddate = gp.Date()
-        upldate = gp.Date()
-        # id = 
 
-    ok = gp.Boolean()
-    book = gp.Field(lambda : Book)
+    Output = Book
 
-    def mutate(root, info):
-        book = Book(id=id,
-            user_id=user_id,
-            title=title,
-            description=description,
-            urls=urls,
-            moddate=moddate,
-            upldate=upldate,
-            )
-        ok = True
-        return Mutation(book=book, ok=ok)
+    def mutate(root, info, id, user_id,
+                title, description, urls):
+        insert_statement = """ INSERT INTO books
+            (id, user_id, title, description, urls)
+        VALUES
+            (%s, %s, %s, %s, %s)
+        """
+        updates = (id, user_id, title,
+                description, urls)
 
-class CreateBook(gp.ObjectType):
-    new_book = Mutation.Field()
+        cursor = db.connection.cursor()
+        cursor.execute(insert_statement, updates)
+        db.connection.commit()
+
+        check_statement = "select * from books where id = '{}'".format(id)
+        cursor.execute(check_statement)
+        new_record = cursor.fetchone()
+
+        return new_record
+
+class UpdateBook(gp.Mutation):
+    class Arguments:
+        id = gp.ID(required=True)
+        user_id = gp.ID(default_value=False)
+        title = gp.String(default_value=False)
+        description = gp.String(default_value=False)
+        urls = gp.String(default_value=False)
+
+    Output = Book
+
+    def mutate(root, info, id,
+            user_id, title, description, urls):
+        statement = "select * from books where id = '{}'".format(id)
+        
+        cursor = db.connection.cursor()
+        cursor.execute(statement)
+        record = cursor.fetchone()
+
+        if title:
+            record['title'] = title
+
+        if description:
+            record['description'] = description
+
+        if urls:
+            record['urls'] = urls
+
+        update_statement = """UPDATE books
+        SET
+            title = %s,
+            description = %s,
+            urls = %s,
+            moddate = CURRENT_TIMESTAMP()
+        WHERE id = %s 
+        """
+
+        updates = (
+            record['title'], record['description'],
+            record['urls'], record['id'])
+
+        cursor.execute(update_statement, updates)
+        db.connection.commit()
+        return record
+
+class DeleteBook(gp.Mutation):
+    class Arguments:
+        id = gp.ID(required=True)
+
+    Output = Book
+
+
+    def mutate(root, info, id):
+        cursor = db.connection.cursor()
+        statement = "select * from books where id = '{}'".format(id)
+        cursor.execute(statement)
+        record = cursor.fetchone()
+
+        delete_statement = "DELETE FROM books WHERE id = '{}' ".format(id)
+
+        cursor = db.connection.cursor()
+        cursor.execute(delete_statement)
+        db.connection.commit()
+        return record
+
+class Mutation(gp.ObjectType):
+    create_book = CreateBook.Field()
+    update_book = UpdateBook.Field()
+    delete_book = DeleteBook.Field()
 
 
 class Book_DB:
@@ -81,11 +144,17 @@ class Book_DB:
         CREATE TABLE {cls.tablename}(
             id varchar(30) PRIMARY KEY,
             user_id varchar(30),
+            title varchar(30),
             description text,
+            urls text,
             upldate datetime DEFAULT CURRENT_TIMESTAMP(),
             moddate datetime DEFAULT CURRENT_TIMESTAMP()
         )
         """)
         return statement
 
-schema = gp.Schema(query=Query,auto_camelcase=False, mutation=CreateBook)
+schema = gp.Schema(
+    query=Query,
+    mutation=Mutation, 
+    auto_camelcase=False
+    )
