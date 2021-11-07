@@ -1,4 +1,8 @@
 import graphene as gp
+from server import db, bcrypt
+from server.schemas.book import Book
+from secrets import token_hex
+
 
 class User(gp.ObjectType):
     id = gp.ID(required=True)
@@ -6,11 +10,142 @@ class User(gp.ObjectType):
     email = gp.String()
     password = gp.String()
     verified = gp.Int()
-    #correct version: books = gp.List(Book)
-    books = gp.List(gp.String)
+    books = gp.List(Book)
+    # books = gp.List(gp.String)
 
 class Query(gp.ObjectType):
-    pass
+    user = gp.Field(User)
+    user_by_id = gp.Field(User, id=gp.ID(required=True))
+    allusers = gp.List(User)
+
+    def resolve_user_by_id(root, info, id):
+        cursor = db.connection.cursor()
+        statement = "select * from users where id = '{}'".format(id)
+        cursor.execute(statement)
+        record = cursor.fetchone()
+        return record
+
+    def resolve_allbooks(root, info):
+        cursor = db.connection.cursor()
+
+        statement = "select * from users"
+        cursor.execute(statement)
+
+        records = cursor.fetchall()
+
+        return records
+
+
+class CreateUser(gp.Mutation):
+    class Arguments:
+        name = gp.String()
+        email = gp.String()
+        password = gp.String()
+        # verified = gp.String()
+        # books = gp.List()
+
+    Output = User
+
+    def mutate(root, info, name, email,
+                password):
+        insert_statement = """ INSERT INTO users
+            (id, name, email, password)
+        VALUES
+            (%s, %s, %s, %s)
+        """
+
+        crypt_pass = bcrypt.generate_password_hash(password)
+        new_token = token_hex(8)
+
+        insertions = (new_token, name,
+                email, crypt_pass)
+
+        cursor = db.connection.cursor()
+        cursor.execute(insert_statement, insertions)
+        db.connection.commit()
+
+        check_statement = "select * from users where id = '{}'".format(new_token)
+        cursor.execute(check_statement)
+        new_record = cursor.fetchone()
+   
+        return new_record
+
+class UpdateUser(gp.Mutation):
+    class Arguments:
+        id = gp.ID(required=True)
+        name = gp.String(default_value=False)
+        email = gp.String(default_value=False)
+        books = gp.List(Book, default_value=False)
+
+    Output = User
+
+    def mutate(root, info, id,
+            name, email, books):
+
+        statement = "select * from books where id = '{}'".format(id)
+
+        cursor = db.connection.cursor()
+        cursor.execute(statement)
+        record = cursor.fetchone()
+
+        if name:
+            record['name'] = name
+
+        if email:
+            record['email'] = email
+
+        if email:
+            record['books'] = books
+
+        update_statement = """ UPDATE users
+        SET
+            name = %s,
+            email = %s,
+            books = %s,
+            moddate = CURRENT_TIMESTAMP()
+        WHERE id = %s
+        """
+
+        updates = (
+            record['name'], record['email'],
+            record['books'], record['id']
+        )
+
+
+        cursor.execute(update_statement, updates)
+        db.connection.commit()
+        return record
+
+class DeleteUser(gp.Mutation):
+    class Arguments:
+        id = gp.ID(required=True)
+
+    Output = Book
+
+    def mutate(root, info, id):
+        cursor = db.connection.cursor()
+        statement = "select * from users where id = '{}'".format(id)
+        cursor.execute(statement)
+        record = cursor.fetchone()
+
+        delete_statement = "DELETE FROM users WHERE id = '{}' ".format(id)
+
+        cursor = db.connection.cursor()
+        cursor.execute(delete_statement)
+        db.connection.commit()
+        return record
+
+
+
+
+class Mutation(gp.ObjectType):
+    create_user = CreateUser.Field()
+    update_user = UpdateUser.Field()
+    delete_user = DeleteUser.Field()
+    # need to add:
+    # verify user (verify through email)
+    # authorize user ()
+
 
 class User_DB:
     mtype = 'user'
@@ -28,7 +163,6 @@ class User_DB:
             books text,
             upldate datetime DEFAULT CURRENT_TIMESTAMP(),
             moddate datetime DEFAULT CURRENT_TIMESTAMP()
-   
         )    
         """)
 

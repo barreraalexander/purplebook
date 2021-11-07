@@ -36,7 +36,6 @@ class Query(gp.ObjectType):
 
 class CreateBook(gp.Mutation):
     class Arguments:
-        id = gp.ID(required=True)
         user_id = gp.ID(required=True)
         title = gp.String()
         description = gp.String()
@@ -44,18 +43,21 @@ class CreateBook(gp.Mutation):
 
     Output = Book
 
-    def mutate(root, info, id, user_id,
+    def mutate(root, info, user_id,
                 title, description, urls):
         insert_statement = """ INSERT INTO books
             (id, user_id, title, description, urls)
         VALUES
             (%s, %s, %s, %s, %s)
         """
-        updates = (id, user_id, title,
+
+        new_token = token_hex(8)
+
+        insertions = (new_token, user_id, title,
                 description, urls)
 
         cursor = db.connection.cursor()
-        cursor.execute(insert_statement, updates)
+        cursor.execute(insert_statement, insertions)
         db.connection.commit()
 
         check_statement = "select * from books where id = '{}'".format(id)
@@ -67,7 +69,7 @@ class CreateBook(gp.Mutation):
 class UpdateBook(gp.Mutation):
     class Arguments:
         id = gp.ID(required=True)
-        user_id = gp.ID(default_value=False)
+        user_id = gp.ID(default_value=False) #should delete this and cascade changes of user id
         title = gp.String(default_value=False)
         description = gp.String(default_value=False)
         urls = gp.String(default_value=False)
@@ -102,7 +104,8 @@ class UpdateBook(gp.Mutation):
 
         updates = (
             record['title'], record['description'],
-            record['urls'], record['id'])
+            record['urls'], record['id']
+        )
 
         cursor.execute(update_statement, updates)
         db.connection.commit()
