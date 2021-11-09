@@ -1,5 +1,7 @@
 from flask import Blueprint, request
+from flask_login import current_user
 from server.schemas.book import schema as BookSchema
+from server.schemas.user import schema as UserSchema
 from server.blueprints.graphql import RES_DICTS
 import json
 
@@ -8,6 +10,7 @@ graphql = Blueprint('graphql', __name__,
 
 @graphql.route('/test')
 def test():
+    print (current_user.is_authenticated)
     return {'hey' : 'hi'}, 200
 
 
@@ -17,23 +20,20 @@ def book_ep():
     if request.method == "POST":
         data = json.loads(request.data)
         element = BookSchema.execute(data['query'])
-        print ('ELEMENT')
-        print (element)
         if element.errors:
             print (element.errors)
             return RES_DICTS['error']
         
     return element.data, 200
 
-# @graphql.route('/book_ep', methods=['POST', 'GET'])
-# def book_ep():
-#     if request.method == "POST":
-#         data = json.loads(request.data)
-#         element = BookSchema.execute(data['query'])
-#         print ('ELEMENT')
-#         print (element)
-#         if element.errors:
-#             print (element.errors)
-#             return RES_DICTS['error']
+@graphql.route('/user_ep', methods=['POST', 'GET'])
+def user_ep():
+    if request.method == "POST":
+        data = json.loads(request.data)
+        element = UserSchema.execute(data['query'])
+        if element.errors:
+            print ('ERROR \n')
+            print (element.errors)
+            return RES_DICTS['error']
         
-#     return element.data, 200
+    return element.data, 200

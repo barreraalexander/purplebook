@@ -3,7 +3,6 @@ from server import db, bcrypt
 from server.schemas.book import Book
 from secrets import token_hex
 
-
 class User(gp.ObjectType):
     id = gp.ID(required=True)
     name = gp.String()
@@ -11,11 +10,15 @@ class User(gp.ObjectType):
     password = gp.String()
     verified = gp.Int()
     books = gp.List(Book)
+
+    # def resolve_password(root, info):
+    #     return 'INACCESSIBLE'
     # books = gp.List(gp.String)
 
 class Query(gp.ObjectType):
     user = gp.Field(User)
     user_by_id = gp.Field(User, id=gp.ID(required=True))
+    user_by_email = gp.Field(User, email=gp.String(required=True))
     allusers = gp.List(User)
 
     def resolve_user_by_id(root, info, id):
@@ -25,14 +28,18 @@ class Query(gp.ObjectType):
         record = cursor.fetchone()
         return record
 
-    def resolve_allbooks(root, info):
+    def resolve_user_by_email(root, info, email):
         cursor = db.connection.cursor()
+        statement = "select * from users where email = '{}'".format(email)
+        cursor.execute(statement)
+        record = cursor.fetchone()
+        return record
 
+    def resolve_allusers(root, info):
+        cursor = db.connection.cursor()
         statement = "select * from users"
         cursor.execute(statement)
-
         records = cursor.fetchall()
-
         return records
 
 
@@ -41,8 +48,6 @@ class CreateUser(gp.Mutation):
         name = gp.String()
         email = gp.String()
         password = gp.String()
-        # verified = gp.String()
-        # books = gp.List()
 
     Output = User
 
@@ -55,6 +60,7 @@ class CreateUser(gp.Mutation):
         """
 
         crypt_pass = bcrypt.generate_password_hash(password)
+        #cyrpt_pass = bcrypt.generate_password_hash(new_manager.password).decode('utf8')
         new_token = token_hex(8)
 
         insertions = (new_token, name,
@@ -75,19 +81,20 @@ class UpdateUser(gp.Mutation):
         id = gp.ID(required=True)
         name = gp.String(default_value=False)
         email = gp.String(default_value=False)
-        books = gp.List(Book, default_value=False)
+        books = gp.List(gp.String,default_value=False)
 
     Output = User
 
     def mutate(root, info, id,
             name, email, books):
 
-        statement = "select * from books where id = '{}'".format(id)
+        statement = "select * from users where id = '{}'".format(id)
 
         cursor = db.connection.cursor()
         cursor.execute(statement)
         record = cursor.fetchone()
 
+        print (record)
         if name:
             record['name'] = name
 
@@ -120,7 +127,7 @@ class DeleteUser(gp.Mutation):
     class Arguments:
         id = gp.ID(required=True)
 
-    Output = Book
+    Output = User
 
     def mutate(root, info, id):
         cursor = db.connection.cursor()
@@ -135,17 +142,47 @@ class DeleteUser(gp.Mutation):
         db.connection.commit()
         return record
 
+class VerifyUser(gp.Mutation):
+    class Arguments:
+        id = gp.ID(required=True)
 
+    Output = User
 
+    def mutate(root, info, id):
+        pass
+
+class LoginUser(gp.Mutation):
+    class Arguments:
+        email = gp.String(required=True)
+        password = gp.String(required=True)
+
+    Output = User
+
+    def mutate(root, info, email, password):
+        statement  = "select * from users where email = '{}'".format(email)
+        cursor = db.connection.cursor()
+        cursor.execute(statement)
+        record = cursor.fetchone()
+
+        if record and bcrypt.check_password_hash(record['password'], password):
+            mdict = {
+                "id" : record['id'],
+                "name" : record['name'],
+                "email" : record['email'],
+                "password" : record['password'],
+                "verified" : record['verified'],
+                "books" : record['books'],
+            }
+            return record
+
+        data = {}
+        return data
 
 class Mutation(gp.ObjectType):
     create_user = CreateUser.Field()
     update_user = UpdateUser.Field()
     delete_user = DeleteUser.Field()
-    # need to add:
-    # verify user (verify through email)
-    # authorize user ()
-
+    login_user = LoginUser.Field()
 
 class User_DB:
     mtype = 'user'
@@ -157,7 +194,7 @@ class User_DB:
         CREATE TABLE {cls.tablename}(
             id varchar(30) PRIMARY KEY,
             name varchar(30),
-            email varchar(30) NOT NULL,
+            email varchar(30) NOT NULL UNIQUE,
             password varchar(30) NOT NULL,
             verified int DEFAULT 0,
             books text,
@@ -167,3 +204,9 @@ class User_DB:
         """)
 
         return statement
+
+schema = gp.Schema(
+    query=Query,
+    mutation=Mutation,
+    auto_camelcase=False
+)
