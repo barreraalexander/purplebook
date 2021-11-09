@@ -148,38 +148,10 @@ class VerifyUser(gp.Mutation):
     def mutate(root, info, id):
         pass
 
-class LoginUser(gp.Mutation):
-    class Arguments:
-        email = gp.String(required=True)
-        password = gp.String(required=True)
-
-    Output = User
-
-    def mutate(root, info, email, password):
-        statement  = "select * from users where email = '{}'".format(email)
-        cursor = db.connection.cursor()
-        cursor.execute(statement)
-        record = cursor.fetchone()
-
-        if record and bcrypt.check_password_hash(record['password'], password):
-            mdict = {
-                "id" : record['id'],
-                "name" : record['name'],
-                "email" : record['email'],
-                "password" : record['password'],
-                "verified" : record['verified'],
-                "books" : record['books'],
-            }
-            return record
-
-        data = {}
-        return data
-
 class Mutation(gp.ObjectType):
     create_user = CreateUser.Field()
     update_user = UpdateUser.Field()
     delete_user = DeleteUser.Field()
-    login_user = LoginUser.Field()
 
 class User_DB:
     mtype = 'user'
