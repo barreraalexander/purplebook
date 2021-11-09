@@ -10,7 +10,7 @@ from server.db import DB
 from server.configs import Config
 
 login_manager = LoginManager()
-login_manager.login_view = "auth.authorize_login"
+login_manager.login_view = "auth.authorize_user"
 login_manager.login_message_category = "info"
 
 bcrypt = Bcrypt()

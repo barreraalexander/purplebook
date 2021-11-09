@@ -10,8 +10,9 @@ graphql = Blueprint('graphql', __name__,
 
 @graphql.route('/test')
 def test():
-    print (current_user.is_authenticated)
-    return {'hey' : 'hi'}, 200
+    if (current_user.is_authenticated):
+        return RES_DICTS['good']
+    return RES_DICTS['error']
 
 
 

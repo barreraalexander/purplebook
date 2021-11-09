@@ -11,9 +11,6 @@ class User(gp.ObjectType):
     verified = gp.Int()
     books = gp.List(Book)
 
-    # def resolve_password(root, info):
-    #     return 'INACCESSIBLE'
-    # books = gp.List(gp.String)
 
 class Query(gp.ObjectType):
     user = gp.Field(User)
@@ -59,8 +56,8 @@ class CreateUser(gp.Mutation):
             (%s, %s, %s, %s)
         """
 
-        crypt_pass = bcrypt.generate_password_hash(password)
-        #cyrpt_pass = bcrypt.generate_password_hash(new_manager.password).decode('utf8')
+        # crypt_pass = bcrypt.generate_password_hash(password)
+        crypt_pass = bcrypt.generate_password_hash(password).decode('utf8')
         new_token = token_hex(8)
 
         insertions = (new_token, name,
