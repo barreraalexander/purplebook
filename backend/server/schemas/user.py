@@ -139,6 +139,15 @@ class DeleteUser(gp.Mutation):
         db.connection.commit()
         return record
 
+class AddBook(gp.Mutation):
+    class Arguments:
+        id = gp.ID(required=True)
+        book_id = gp.ID(required=True)
+
+    def mutate(root, info, id, book_id):
+        pass
+
+
 class VerifyUser(gp.Mutation):
     class Arguments:
         id = gp.ID(required=True)
@@ -164,7 +173,7 @@ class User_DB:
             id varchar(30) PRIMARY KEY,
             name varchar(30),
             email varchar(30) NOT NULL UNIQUE,
-            password varchar(30) NOT NULL,
+            password varchar(100) NOT NULL,
             verified int DEFAULT 0,
             books text,
             upldate datetime DEFAULT CURRENT_TIMESTAMP(),

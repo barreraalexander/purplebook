@@ -146,14 +146,15 @@ class Book_DB:
         statement = (f"""
         CREATE TABLE {cls.tablename}(
             id varchar(30) PRIMARY KEY,
-            user_id varchar(30),
+            user_id varchar(30) NOT NULL,
             title varchar(30),
             description text,
             urls text,
             upldate datetime DEFAULT CURRENT_TIMESTAMP(),
-            moddate datetime DEFAULT CURRENT_TIMESTAMP()
-        )
-        """)
+            moddate datetime DEFAULT CURRENT_TIMESTAMP(),
+            FOREIGN KEY (user_id) REFERENCES users(id)
+                ON UPDATE CASCADE
+        )""")
         return statement
 
 schema = gp.Schema(

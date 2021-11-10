@@ -4,8 +4,6 @@ from server.schemas.book import Book_DB, schema as BookSchema
 from server.schemas.user import User_DB, schema as UserSchema
 from server.models.user import Auth_Model
 from flask import Blueprint, request
-# from flask_login import login_user as authorize_user
-
 
 api = Blueprint('api', __name__,
     url_prefix="/api")
@@ -19,7 +17,9 @@ def test():
 def create_tables():
     statement = Book_DB.table_statement()
     # statement = User_DB.table_statement()
+    # statement = "DROP TABLE books"
     cur = db.connection.cursor()
+
     try:
         cur.execute(statement)
         db.connection.commit()
