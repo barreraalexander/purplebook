@@ -139,13 +139,13 @@ class DeleteUser(gp.Mutation):
         db.connection.commit()
         return record
 
-class AddBook(gp.Mutation):
-    class Arguments:
-        id = gp.ID(required=True)
-        book_id = gp.ID(required=True)
+# class AddBook(gp.Mutation):
+#     class Arguments:
+#         id = gp.ID(required=True)
+#         book_id = gp.ID(required=True)
 
-    def mutate(root, info, id, book_id):
-        pass
+#     def mutate(root, info, id, book_id):
+#         pass
 
 
 class VerifyUser(gp.Mutation):

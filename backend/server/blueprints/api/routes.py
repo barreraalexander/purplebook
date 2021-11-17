@@ -16,8 +16,6 @@ def test():
 @api.route('/create_tables')
 def create_tables():
     statement = Book_DB.table_statement()
-    # statement = User_DB.table_statement()
-    # statement = "DROP TABLE books"
     cur = db.connection.cursor()
 
     try:
