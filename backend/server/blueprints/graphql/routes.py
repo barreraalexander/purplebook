@@ -5,15 +5,16 @@ from server.schemas.user import schema as UserSchema
 from server.blueprints.graphql import RES_DICTS
 import json
 
+
 graphql = Blueprint('graphql', __name__,
     url_prefix="/graphql")
+
 
 @graphql.route('/test')
 def test():
     if (current_user.is_authenticated):
         return RES_DICTS['good']
     return RES_DICTS['error']
-
 
 
 @graphql.route('/book_ep', methods=['POST', 'GET'])
@@ -38,3 +39,4 @@ def user_ep():
             return RES_DICTS['error']
         
     return element.data, 200
+

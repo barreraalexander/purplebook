@@ -8,6 +8,8 @@ class Book(gp.ObjectType):
     title = gp.String()
     description  = gp.String()
     urls = gp.List(gp.String)
+    background_gradient = gp.String(default_value='none')
+
     moddate = gp.Date()
     upldate = gp.Date()
 
@@ -73,11 +75,12 @@ class UpdateBook(gp.Mutation):
         title = gp.String(default_value=False)
         description = gp.String(default_value=False)
         urls = gp.String(default_value=False)
+        #background_gradient = gp.String(default_value=False)
 
     Output = Book
 
     def mutate(root, info, id,
-            user_id, title, description, urls):
+            user_id, title, description, urls, background_gradient):
         statement = "select * from books where id = '{}'".format(id)
         
         cursor = db.connection.cursor()
@@ -93,18 +96,23 @@ class UpdateBook(gp.Mutation):
         if urls:
             record['urls'] = urls
 
+        if background_gradient:
+            record['background_gradient'] = background_gradient
+
         update_statement = """UPDATE books
         SET
             title = %s,
             description = %s,
             urls = %s,
+            background_gradient = %s,
             moddate = CURRENT_TIMESTAMP()
         WHERE id = %s 
         """
 
         updates = (
             record['title'], record['description'],
-            record['urls'], record['id']
+            record['urls'], record['background_gradient'],
+            record['id']
         )
 
         cursor.execute(update_statement, updates)
@@ -150,6 +158,7 @@ class Book_DB:
             title varchar(30),
             description text,
             urls text,
+            background_gradient varchar(30), 
             upldate datetime DEFAULT CURRENT_TIMESTAMP(),
             moddate datetime DEFAULT CURRENT_TIMESTAMP(),
             FOREIGN KEY (user_id) REFERENCES users(id)

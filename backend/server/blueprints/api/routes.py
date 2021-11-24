@@ -9,9 +9,11 @@ api = Blueprint('api', __name__,
     url_prefix="/api")
 
 
+
 @api.route('/test')
 def test():
     return {'hey' : 'hi'}, 200
+
 
 @api.route('/create_tables')
 def create_tables():
@@ -29,3 +31,6 @@ def create_tables():
 
     return {'hey' : 'hi'}, 400
 
+# @api.route('/create_table')
+# def create_table():
+#     pass
