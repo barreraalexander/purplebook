@@ -1,0 +1,85 @@
+h1, h2, h3,
+h4, h5, h6,
+p, ul, li a {
+    margin: 0;
+    padding: 0;
+}
+
+ul{
+    list-style: none;
+}
+
+a{
+    display: contents;
+    text-decoration: underline;
+}
+
+a:hover{
+    text-decoration: none;
+}
+
+
+
+@mixin xheavy_type (){
+    font-size: var(--xlg_sz);
+    font-weight: var(--xlg_wt);
+    letter-spacing: var(--lg_space);
+    color: var(--primary);
+    font-family: var(--font_fam1);
+    
+}
+
+@mixin heavy_type (){
+    font-size: var(--lg_sz);
+    font-weight: var(--lg_wt);
+    letter-spacing: var(--lg_space);
+    color: var(--primary);
+    font-family: var(--font_fam2);
+    
+}
+
+@mixin medium_type() {
+    font-size: var(--md_sz);
+    font-weight: var(--md_wt);
+    letter-spacing: var(--md_space);
+    color: var(--proj_black);
+    font-family: var(--font_fam2);
+    
+}
+
+@mixin light_type() {
+    font-size: var(--sm_sz);
+    font-weight: var(--sm_wt);
+    letter-spacing: var(--sm_space);
+    color: var(--proj_black);
+    font-family: var(--font_fam2);
+}
+
+
+@mixin xlight_type() {
+    font-size: var(--xsm_sz);
+    font-weight: var(--xsm_wt);
+    letter-spacing: var(--sm_space);
+    color: var(--proj_black);
+    font-family: var(--font_fam2);
+}
+
+h1, h2, h3{
+    @include xheavy_type();
+}
+
+h4, h5, h6{
+    @include heavy_type();
+}
+
+p, li {
+    @include medium_type();
+}
+
+a{
+    @include medium_type();
+}
+
+small{
+    @include light_type();
+}
