@@ -13,11 +13,13 @@ html, body{
     --accent1: #D7CFE7;
     --accent2: #4A4060;
     --accent3: #9380C0;
+    --accent4: #A190C8;
     --proj_gray: #707070;
     --proj_black: #252030;
     --proj_white: #F2EFF7;
 
 
+    --xsm_sz: .7em;
     --sm_sz: .9em;
     --md_sz: 1.1em;
     --lg_sz: 1.3em;
@@ -39,6 +41,7 @@ html, body{
     --common_margin_bottom: 3em;
     --common_section_padding: 2em;
 
+    --border_radius0: .3em;
     --border_radius1: 1em;
     --border_radius2: 1.3em;
 
@@ -52,3 +55,14 @@ html, body{
     }
 }
 
+body[data-body_type='alt1']{
+    background-color: unset;
+}
+
+body[data-body_type='alt2']{
+    background-color: var(--proj_black);
+}
+
+body[data-body_type='alt3']{
+    background-color: var(--proj_white);
+}

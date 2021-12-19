@@ -3,9 +3,6 @@ import { ReactComponent as Img1 } from '../../static/images/assets/pouring_bucke
 
 
 export default class Explanation2 extends Component{
-    constructor(props){
-        super(props);
-    }
     render(){
         return (
             <section id="Explanation2">

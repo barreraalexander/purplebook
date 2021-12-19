@@ -3,10 +3,7 @@ import { ReactComponent as Img1 } from '../../static/images/assets/create_a_buck
 
 
 export default class Explanation1 extends Component{
-    constructor(props){
-        super(props);
-        
-    }
+
     render(){
         return (
             <section id="Explanation1">
@@ -22,7 +19,7 @@ export default class Explanation1 extends Component{
                 <span>
                      versatile 
                 </span>
-                , so that a bucket can be a novelists book in progress or a programmers project outline.
+                , so that a bucket can be a novelists book-in-progress or a programmers project outline.
                 </p>
                 <Img1 />
             </section>

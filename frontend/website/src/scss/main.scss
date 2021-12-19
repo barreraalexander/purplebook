@@ -1,9 +1,23 @@
+// BASE
 @use './base/base.scss';
 @use './base/typo.scss';
 @use './base/mixins.scss';
 @use './base/animations.scss';
+@use './base/classes.scss';
 
+// HEADERS
 @use './navbars/main-header.scss';
 
-
+// PAGES
 @use './pages/landing.scss';
+@use './pages/account.scss';
+@use './pages/about.scss';
+
+// SECTIONS
+@use './sections/explanation1.scss';
+@use './sections/explanation2.scss';
+@use './sections/explanation3.scss';
+@use './sections/calltoaction.scss';
+
+// FORMS
+@use './forms/authorize_form.scss';

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-export default class MainHeader extends Component{
+export default class MainFooter extends Component{
     render(){
         return(
 

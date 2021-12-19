@@ -1,0 +1,56 @@
+
+#CallToAction{
+    background-image: url('../../static/images/assets/ending_splash.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: var(--proj_white);
+    position: relative;
+
+    padding-bottom: 1em;
+    .heading_ctnr{
+        padding-top: 18em;
+        small,h1{
+            color: var(--accent3);
+        }
+        h1{
+            font-size: 2.5em;
+            font-weight: 100;
+
+        }
+    }
+    .cta_ctnr{
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        gap: .5em;
+        margin-top: var(--common_margin_top);
+        h2{
+            font-weight: 300;
+            color: var(--primary);
+        }
+        button{
+            padding:  .5em 1em;
+            border: none;
+            font-size: var(--md_sz);
+            border-radius: var(--border_radius1);
+            background-color: var(--accent1);
+            font-weight: 600;
+        }
+        small{
+            color: var(--primary);
+        }
+    }
+
+}
+
+
+@media only screen and (min-width: 769px) {
+    #CallToAction{
+        .heading_ctnr{
+            padding-top: 12em;
+            text-align: center;
+            font-size: 1.5em;
+        }
+    }
+
+}

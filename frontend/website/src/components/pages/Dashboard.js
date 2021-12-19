@@ -1,11 +1,21 @@
-import React from "react";
+import React, {Component} from 'react';
 
-const Dashboard = () => (
-    <section id="Dashboard">
-        <h1>
-            Dashboard
-        </h1>
-    </section>
-);
+export default class Dashboard extends Component {
+    constructor(props){
+        super(props);
+    }
 
-export default Dashboard;
+    componentWillMount(){
+        document.body.dataset.body_type = 'alt1'
+    }
+
+    render(){
+        return (
+            <section id="Dashboard">
+                <h1>
+                    Dashboard
+                </h1>
+            </section>
+        )
+    }
+} 

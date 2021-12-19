@@ -1,0 +1,24 @@
+.heading_ctnr{
+    padding: var(--common_section_padding);
+    p{
+        color: var(--proj_gray);
+    }
+    h1{
+        color: var(--accent2);
+    }
+}
+
+
+.general_text_ctnr{
+    padding: var(--common_section_padding);
+    width: 80%;
+    max-width: 40em;
+    p{
+        color: var(--accent1);
+    }
+    span {
+        color: var(--accent4);
+        font-weight: var(--md_wt);
+        padding: 0 .15em;
+    }
+}

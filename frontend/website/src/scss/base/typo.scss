@@ -80,6 +80,10 @@ a{
     @include medium_type();
 }
 
+a:hover{
+    cursor: pointer;
+}
+
 small{
     @include light_type();
 }

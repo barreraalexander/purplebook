@@ -1,10 +1,8 @@
 import React from 'react'
 import { NavLink } from "react-router-dom";
-import Dashboard from './../pages/Dashboard';
-
 
 import { ReactComponent as HeaderImg } from '../../static/images/assets/header.svg'
-import { ReactComponent as Logo } from '../../static/images/icons/logo.svg'
+// import { ReactComponent as Logo } from '../../static/images/icons/logo.svg'
 
 
 export default function MainHeader() {

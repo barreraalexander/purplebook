@@ -1,13 +1,12 @@
 from flask import Blueprint, request
-from flask_login import login_required
+from flask_login import login_required, login_user
 from server.schemas.book import schema as BookSchema
 
 from server import db, bcrypt, login_manager
 from server.blueprints.graphql import RES_DICTS 
 from server.schemas.user import User_DB, schema as UserSchema
 from server.models.user import Auth_Model
-from flask import Blueprint, request
-from flask_login import logout_user, login_user
+
 
 auth = Blueprint("auth", __name__,
     url_prefix="/auth")

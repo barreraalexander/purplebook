@@ -14,6 +14,8 @@ import Dashboard from './components/pages/Dashboard';
 //Components
 import MainHeader from './components/navbars/main-header.component';
 
+//JS
+
 
 ReactDOM.render(
     <Router>
