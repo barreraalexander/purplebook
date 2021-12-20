@@ -91,14 +91,15 @@ export default class AuthorizeForm extends Component{
         e.preventDefault()
 
         if (this.state.check_password != this.state.password){
-            alert('check pass')
-            return
+            // alert('check pass')
+            // return
         }
 
 
         const new_user = {
             email : this.state.email,
             password : this.state.password,
+            name : this.state.name,
             
         }
 
@@ -119,7 +120,7 @@ export default class AuthorizeForm extends Component{
 
     render(){
         return (
-            <section id='authorize_form_section' onSubmit={this.onSubmit}>
+            <section id='authorize_form_section' method='POST' onSubmit={this.onSubmit}>
                 <form onSubmit={this.onSubmit}>
                     <div id='name_ctnr' className='form_group'>
                         <div className='label_ctnr'>
@@ -133,6 +134,7 @@ export default class AuthorizeForm extends Component{
                         <input
                             type='text'
                             name='name'
+                            id='name'
                             onChange={this.onChangeName}
                             value={this.state.name}
                             required
@@ -150,6 +152,7 @@ export default class AuthorizeForm extends Component{
                         <input
                             type="text"
                             name="email"
+                            id="email"
                             onChange={this.onChangeEmail}
                             value={this.state.email}
                             required
@@ -167,6 +170,7 @@ export default class AuthorizeForm extends Component{
                         <input
                             type="password"
                             name="password"
+                            id="password"
                             onChange={this.onChangePassword}
                             value={this.state.password}
                             required

@@ -59,6 +59,7 @@
         font-size: 1em;
         color: var(--proj_black);
         transition: .5s;
+        max-width: max-content;
     }
     #action_change:hover{
         text-decoration: none;
