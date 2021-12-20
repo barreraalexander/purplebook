@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_login import login_required, login_user
+from flask_login import login_required, login_user, logout_user
 from server.schemas.book import schema as BookSchema
 
 from server import db, bcrypt, login_manager
@@ -47,6 +47,8 @@ def authorize_register():
         input_email = request.form.get('email')
         input_pass = request.form.get('password')
         input_name = request.form.get('name')
+        tdata = request.json
+
 
         query  = """
             mutation register {
@@ -59,13 +61,15 @@ def authorize_register():
             }
         """ % (input_email, input_name, input_pass)
         
+        # print (query)
+
         res = UserSchema.execute(query)
 
         if res.errors:
             print (res.errors)
             return RES_DICTS['error']
 
-        return RES_DICTS['error']
+        return RES_DICTS['good']
 
 @auth.route("/logout")
 @login_required
