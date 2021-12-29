@@ -15,18 +15,20 @@ export default class Landing extends Component {
         document.body.dataset.body_type = 'alt1'
     }
 
+    
+
     render(){
         return (
         <section id="Landing">
             <div className="heading_ctnr">
                 <p>
-                    Welcome To
+                    welcome to
                 </p>
                 <h1>
                     Purple Buckets
                 </h1>
                 <small>
-                    Prettify the Mayhem
+                    prettify the mayhem
                 </small>
             </div>
             <Explanation1 />

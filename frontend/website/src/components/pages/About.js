@@ -20,7 +20,7 @@ export default class About extends Component {
                     Purple Buckets
                 </h1>
                 <small>
-                    A Note-Taking App
+                    a note-taking app
                 </small>
             </div>
             <div className="general_text_ctnr">
@@ -62,6 +62,11 @@ export default class About extends Component {
                     Yes indeed! Please fork it and contribute :)
                 </p>
             </div>
+            <a href="https://github.com/barreraalexander/purplebook">
+                <h4>
+                    Git 🐱
+                </h4>
+            </a>
         </section>
         )
     }

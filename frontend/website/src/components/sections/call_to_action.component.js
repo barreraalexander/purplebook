@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+
 import { ReactComponent as Img1 } from '../../static/images/assets/ending_splash.svg'
 
 
@@ -19,15 +20,17 @@ export default class CallToAction extends Component{
                     </h1>
                 </div>
                 <div className="cta_ctnr">
-                    <h2>
-                        create a free
-                    </h2>
-                    <button type="">
-                        ACCOUNT
-                    </button>
-                    <small>
-                        sign up and get started instantly
-                    </small>
+                    <a href="/account">
+                        <h2>
+                            create a free
+                        </h2>
+                            <button type="button">
+                                ACCOUNT
+                            </button>
+                        <small>
+                            sign up and get started instantly
+                        </small>
+                    </a>
                 </div>
             </section>
         )

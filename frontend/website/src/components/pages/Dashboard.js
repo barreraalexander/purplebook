@@ -12,9 +12,17 @@ export default class Dashboard extends Component {
     render(){
         return (
             <section id="Dashboard">
+            <div className="heading_ctnr">
+                <p>
+                    hello there
+                </p>
                 <h1>
-                    Dashboard
+                    Name
                 </h1>
+                <small>
+                    emailme@gmail.com
+                </small>
+            </div>
             </section>
         )
     }

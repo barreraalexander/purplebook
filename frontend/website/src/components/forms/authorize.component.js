@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { Redirect } from 'react-dom'
+
 import axios from 'axios'
 
 export default class AuthorizeForm extends Component{
@@ -19,6 +21,7 @@ export default class AuthorizeForm extends Component{
             action_type : this.props.action_type,
             login_url : "/auth/login",
             register_url : "/auth/register",
+            redirect : true,
         }
     }
 
@@ -49,8 +52,7 @@ export default class AuthorizeForm extends Component{
     }
 
     onChangeAction(e){
-
-        // e.preventDefault()
+        e.preventDefault()
 
         let anchor = document.querySelector('#action_change')
         let check_password_input = document.querySelector('#check_password_ctnr')
@@ -89,6 +91,11 @@ export default class AuthorizeForm extends Component{
     
     onSubmit(e){
         e.preventDefault()
+        // const history = useHistory();
+        // const navigate = useNavigate()
+
+
+
 
         if (this.state.check_password != this.state.password){
             // alert('check pass')
@@ -103,14 +110,28 @@ export default class AuthorizeForm extends Component{
             
         }
 
-        console.log(new_user)
+        // console.log(new_user)
         if (this.state.action_type==='login'){
             axios.post(this.state.login_url, new_user)
-            .then(res => console.log(res.data));
+            // .then(res => (res.data.status==='good' ? alert('good') : alert('not good'))
+            .then(res => {
+                if (res.data.status=='good'){
+                    // return <Redirect to='/landing' />
+                    // navigate("/landing")
+                    // window.location.replace("/landing")
+                } else {
+                    // return <Redirect to='/account' />
+                    // navigate("/account")
+                    // window.location.replace("/account")
+                    // alert('bad')
+                }
+            })
+            .catch(err => console.log(err));
             
         } else if (this.state.action_type==='register'){
             axios.post(this.state.register_url, new_user)
-            .then(res => console.log(res.data));
+            .then(res => console.log(res.data.status))
+            .catch(err => console.log(err));
 
         }
 
@@ -121,6 +142,7 @@ export default class AuthorizeForm extends Component{
     render(){
         return (
             <section id='authorize_form_section' method='POST' onSubmit={this.onSubmit}>
+                
                 <form onSubmit={this.onSubmit}>
                     <div id='name_ctnr' className='form_group'>
                         <div className='label_ctnr'>

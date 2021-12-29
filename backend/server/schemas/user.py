@@ -69,7 +69,6 @@ class CreateUser(gp.Mutation):
         check_statement = "select * from users where id = '{}'".format(new_token)
         cursor.execute(check_statement)
         new_record = cursor.fetchone()
-
         return new_record
 
 class UpdateUser(gp.Mutation):

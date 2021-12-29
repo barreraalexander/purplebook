@@ -12,6 +12,13 @@
             color: var(--secondary);
         }
     }
+    h4{
+        border-bottom: .09em solid var(--primary);
+        color: var(--primary);
+        max-width: max-content;
+        text-align: center;
+        margin: 0 auto;
+    }
 }
 
 // body{

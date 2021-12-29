@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from flask_login import login_required, login_user, logout_user
+from flask_login import login_required, login_user, logout_user, current_user
 from server.schemas.book import schema as BookSchema
 
 from server import db, bcrypt, login_manager
@@ -44,11 +44,12 @@ def authorize_user():
 
 @auth.route("/register", methods=['POST'])
 def authorize_register():
-        input_email = request.form.get('email')
-        input_pass = request.form.get('password')
-        input_name = request.form.get('name')
-        tdata = request.json
+        input_email = request.json.get('email')
+        input_pass = request.json.get('password')
+        input_name = request.json.get('name')
 
+        # print (request.json['email'])
+#  axios is sending json, so you need to convert this to be read from request.json
 
         query  = """
             mutation register {
@@ -61,8 +62,6 @@ def authorize_register():
             }
         """ % (input_email, input_name, input_pass)
         
-        # print (query)
-
         res = UserSchema.execute(query)
 
         if res.errors:
@@ -79,4 +78,12 @@ def logout():
         return RES_DICTS['good']
     except Exception as err:
         print (err)
+        return RES_DICTS['error']
+
+@auth.route("/get_current_user")
+@login_required
+def get_current_user():
+    if current_user.is_authenticated:
+        return (current_user._id)
+    else:
         return RES_DICTS['error']

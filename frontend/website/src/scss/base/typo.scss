@@ -18,7 +18,9 @@ a:hover{
     text-decoration: none;
 }
 
-
+button:hover{
+    cursor: pointer;
+}
 
 @mixin xheavy_type (){
     font-size: var(--xlg_sz);
