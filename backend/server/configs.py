@@ -2,9 +2,9 @@ import json
 from os import path
 
 RUN_OPTIONS = {
-    'LOCAL' : '/etc/purplebook_config.json' ,
+    'LOCAL' : path.expanduser('~/etc/purplebook_config.json') ,
     'SERVER' : '/etc/purplebook_config_aws.json',
-    'MOBILE' : '~/etc/mobile_config.json',
+    'MOBILE' : path.expanduser('~/etc/mobile_config.json'),
 }
 
 RUNNING = RUN_OPTIONS['LOCAL']
