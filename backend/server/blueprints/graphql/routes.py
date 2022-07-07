@@ -10,6 +10,8 @@ graphql = Blueprint('graphql', __name__,
     url_prefix="/graphql")
 
 
+
+
 @graphql.route('/test')
 def test():
     if (current_user.is_authenticated):
