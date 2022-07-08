@@ -5,12 +5,8 @@ from server.schemas.user import schema as UserSchema
 from server.blueprints.graphql import RES_DICTS
 import json
 
-
 graphql = Blueprint('graphql', __name__,
     url_prefix="/graphql")
-
-
-
 
 @graphql.route('/test')
 def test():
