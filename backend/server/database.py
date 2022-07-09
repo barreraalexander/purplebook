@@ -30,11 +30,13 @@ Base = declarative_base()
 def get_db():
     db = SessionLocal()
     try:
-        yield db
+        return db
     finally:
         db.close()
 
-
+def get_session():
+    db = SessionLocal()
+    return db
 
 
 
