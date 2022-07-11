@@ -1,9 +1,8 @@
 import strawberry
+from fastapi import Response, status, HTTPException
 from strawberry.fastapi import GraphQLRouter
-from fastapi import Depends
-from server.database import get_db, get_session
+from server.database import get_session
 from server import models
-from sqlalchemy.orm import Session
 import typing
 from datetime import datetime
 
@@ -60,15 +59,16 @@ class Query:
 
 @strawberry.type
 class Mutation:
+
     @strawberry.mutation
     def add_book(self,
         title: str,
         urls: str="",
         background_gradient: str=""
         ) -> Book:
+
         db = get_session()
         new_book = models.Book(title=title, urls=urls)        
-
 
 
         db.add(new_book)
@@ -78,7 +78,22 @@ class Mutation:
 
         return new_book
 
+    @strawberry.mutation
+    def delete_book(self,
+        id: str,
+        ) -> Book:
 
+        db = get_session()
+        book_query = db.query(models.Book).filter(models.Book.id==id)
+        book = book_query.first()
+
+        if (not book):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="book was not found")
+
+        book_query.delete(synchronize_session=False)
+        db.commit()
+
+        return book
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
 gql = GraphQLRouter(schema)
