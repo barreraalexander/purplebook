@@ -5,6 +5,7 @@ from server.database import get_session
 from server import models
 import typing
 from datetime import datetime
+from sqlalchemy import update
 
 @strawberry.type
 class Book:
@@ -94,6 +95,38 @@ class Mutation:
         db.commit()
 
         return book
+
+    @strawberry.mutation
+    def update_book(self,
+        id: str,
+        title: str="",
+        urls: str="",
+        background_gradient: str="",
+        ) -> Book:
+        
+        db = get_session()
+        book_query = db.query(models.Book).filter(models.Book.id==id)
+        book = book_query.first()
+
+        if (not book):
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Work session was not found")
+
+        if (title):
+            book.title = title
+
+        if (urls):
+            book.urls = urls
+
+        if (background_gradient):
+            book.background_gradient = background_gradient
+
+        book.moddate = datetime.utcnow()
+
+        db.commit()
+        db.refresh(book)
+
+        return book
+
 
 schema = strawberry.Schema(query=Query, mutation=Mutation)
 gql = GraphQLRouter(schema)
