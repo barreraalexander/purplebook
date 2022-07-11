@@ -8,11 +8,20 @@ class Book(Base):
 
     id = Column(Integer, primary_key=True)
     title = Column(String, nullable=False, unique=False)
-    urls = Column(String, nullable=False, unique=False)
-    background_gradient = Column(String, nullable=False, unique=False) 
+    urls = Column(String)
+    background_gradient = Column(String) 
 
     moddate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     upldate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+
+    def __str__(self):
+        return f"""
+        id: {self.id}
+        title: {self.title}
+        upldate: {self.upldate}
+        moddate: {self.moddate}
+        
+        """
 
     # owner_id = Column(Integer, primary_key=True)
 

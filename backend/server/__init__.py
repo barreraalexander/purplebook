@@ -28,8 +28,5 @@ def create_app():
     app.include_router(User_Router, prefix="/user")
     app.include_router(Book_Router, prefix="/book")
     app.include_router(GQL_Router, prefix="/gql")
-
-    # app.include_router(user.router)
-    # app.include_router(auth.router)
-    # app.include_router(graphql.router)
+ 
     return app
