@@ -5,7 +5,7 @@ from server.database import get_session
 from server import models
 import typing
 from datetime import datetime
-from sqlalchemy import update
+
 
 @strawberry.type
 class Book:
