@@ -20,7 +20,6 @@ class Book(Base):
         title: {self.title}
         upldate: {self.upldate}
         moddate: {self.moddate}
-        
         """
 
     # owner_id = Column(Integer, primary_key=True)
@@ -31,8 +30,19 @@ class User(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
-    
-    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    verified = Column(Integer, nullable=False)
+    books = Column(String)
+
+    upldate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     moddate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 
+    def __str__(self):
+        return f"""
+        id: {self.id}
+        email: {self.email}
+        verified: {self.verified}
+        books: {self.books}
+        upldate: {self.upldate}
+        moddate: {self.moddate}
+        """

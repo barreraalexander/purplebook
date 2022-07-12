@@ -15,6 +15,7 @@ class Book:
     background_gradient: typing.Optional[typing.List[str]]
     upldate: typing.Optional[datetime] = None
     moddate: typing.Optional[datetime] = None
+    
 
 @strawberry.type
 class Query:
