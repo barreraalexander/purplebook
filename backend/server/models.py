@@ -10,6 +10,8 @@ class Book(Base):
     title = Column(String, nullable=False, unique=False)
     urls = Column(String)
     background_gradient = Column(String) 
+    # owner_id = Column(Integer, primary_key=True)
+    # owner_id = Column(Integer)
 
     moddate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     upldate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
@@ -22,16 +24,15 @@ class Book(Base):
         moddate: {self.moddate}
         """
 
-    # owner_id = Column(Integer, primary_key=True)
 
 class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String, nullable=False)
     email = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     verified = Column(Integer, nullable=False)
-    books = Column(String)
 
     upldate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     moddate = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))

@@ -1,5 +1,5 @@
 import strawberry
-from fastapi import Response, status, HTTPException
+from fastapi import status, HTTPException
 from strawberry.fastapi import GraphQLRouter
 from server.database import get_session
 from server import models

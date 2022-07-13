@@ -7,10 +7,7 @@ from server.schemas.strawberry_book import gql as Book_Router
 from server.schemas.strawberry_user import gql as User_Router
 from server.routers.graphql import router as GQL_Router
 
-
-
 models.Base.metadata.create_all(bind=engine)
-
 
 
 def create_app():

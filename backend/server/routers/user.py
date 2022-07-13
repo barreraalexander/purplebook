@@ -8,17 +8,10 @@ from fastapi import APIRouter, status, HTTPException, Depends
 
 
 router = APIRouter(
-    prefix ="/users",
+    prefix ="/user",
     tags = ['Users'] 
 )
-
-
-
-
 
 @router.get('/test')
 def get_test():
     return 'test'
-
-
-#  
